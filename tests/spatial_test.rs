@@ -2,7 +2,7 @@
 #[cfg(test)]
 mod tests {
     use geosot::spatial::{GeoSotRegion, spatial_analysis};
-    use geosot::{get_code, to_string};
+    use geosot::get_code;
 
     #[test]
     fn test_basic_spatial_operations() {

@@ -90,6 +90,12 @@ impl GeoSotCell {
     }
 }
 
+impl std::fmt::Display for GeoSotCell {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", to_string(self.code, self.level))
+    }
+}
+
 /// GeoSOT 编码的空间区域表示
 #[pyclass]
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -472,7 +478,7 @@ mod tests {
     fn test_geosot_cell_creation() {
         let cell = GeoSotCell::from_coords(116.397, 39.916, 20);
         assert_eq!(cell.level, 20);
-        println!("Cell: {}", cell.to_string());
+        println!("Cell: {}", cell);
     }
 
     #[test]
