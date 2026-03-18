@@ -178,7 +178,7 @@ mod tests {
             (116.1, 39.1),
             (115.9, 39.1),
         ];
-        let polygon_region = GeoSotRegion::from_polygon(&polygon_points, level);
+        let polygon_region = GeoSotRegion::from_polygon(polygon_points, level);
         println!("多边形区域大小: {}", polygon_region.size());
         assert!(polygon_region.size() > 0);
         

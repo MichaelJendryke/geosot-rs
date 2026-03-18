@@ -375,12 +375,12 @@ impl GeoSotRegion {
     }
 }
 
-#[pymodule]
-pub fn spatial_analysis(m: &Bound<'_, PyModule>) -> PyResult<()> {
+/// 空间分析函数模块
+pub mod spatial_analysis {
+    use super::*;
+
     /// 计算两个区域的 Jaccard 相似度
-    #[pyfn(m)]
-    #[pyo3(name = "jaccard_similarity")]
-    fn jaccard_similarity_py(region1: &GeoSotRegion, region2: &GeoSotRegion) -> f64 {
+    pub fn jaccard_similarity(region1: &GeoSotRegion, region2: &GeoSotRegion) -> f64 {
         if region1.level != region2.level {
             return 0.0;
         }
@@ -396,9 +396,7 @@ pub fn spatial_analysis(m: &Bound<'_, PyModule>) -> PyResult<()> {
     }
 
     /// 计算两个区域的重叠率
-    #[pyfn(m)]
-    #[pyo3(name = "overlap_ratio")]
-    fn overlap_ratio_py(region1: &GeoSotRegion, region2: &GeoSotRegion) -> f64 {
+    pub fn overlap_ratio(region1: &GeoSotRegion, region2: &GeoSotRegion) -> f64 {
         if region1.level != region2.level || region1.is_empty() {
             return 0.0;
         }
@@ -408,9 +406,7 @@ pub fn spatial_analysis(m: &Bound<'_, PyModule>) -> PyResult<()> {
     }
 
     /// 计算区域的紧密度（连通性度量）
-    #[pyfn(m)]
-    #[pyo3(name = "compactness")]
-    fn compactness_py(region: &GeoSotRegion) -> f64 {
+    pub fn compactness(region: &GeoSotRegion) -> f64 {
         if region.size() <= 1 {
             return 1.0;
         }
@@ -432,6 +428,27 @@ pub fn spatial_analysis(m: &Bound<'_, PyModule>) -> PyResult<()> {
         } else {
             adjacent_pairs as f64 / total_pairs as f64
         }
+    }
+}
+
+#[pymodule]
+pub fn spatial_analysis_py(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    #[pyfn(m)]
+    #[pyo3(name = "jaccard_similarity")]
+    fn jaccard_similarity_py(region1: &GeoSotRegion, region2: &GeoSotRegion) -> f64 {
+        spatial_analysis::jaccard_similarity(region1, region2)
+    }
+
+    #[pyfn(m)]
+    #[pyo3(name = "overlap_ratio")]
+    fn overlap_ratio_py(region1: &GeoSotRegion, region2: &GeoSotRegion) -> f64 {
+        spatial_analysis::overlap_ratio(region1, region2)
+    }
+
+    #[pyfn(m)]
+    #[pyo3(name = "compactness")]
+    fn compactness_py(region: &GeoSotRegion) -> f64 {
+        spatial_analysis::compactness(region)
     }
 
     Ok(())
